@@ -1,4 +1,4 @@
 module.exports = {
-    "extends": "airbnb",
-    "allow": "_id",
-};
+    "extends": "airbnb-base",
+    "allow": "_id"
+}
