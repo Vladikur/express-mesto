@@ -51,7 +51,7 @@ const createCard = (req, res) => {
 }
 
 const deleteCard = (req, res) => {
-    return Card.findByIdAndRemove(req.body._id)
+    return Card.findByIdAndRemove(req.params.cardId)
         .then((user) => {
             if (user) { 
             return res
@@ -76,39 +76,41 @@ const deleteCard = (req, res) => {
 }
 
 const putLike = (req, res) => {
-    return Card.findByIdAndUpdate(req.body._id,
+    return Card.findByIdAndUpdate(req.params.cardId,
         { $addToSet: { likes: req.user._id } },
         { new: true },)
-        .then((card) => { 
+        .then((card) => {
             if (card) {
             return res
                 .status(201)
                 .send(card)
-            } else if (!req.user._id) {
-            return res
-                .status(404)
-                .send({
-                    message: "Передан несуществующий _id пользователя"
-                })
             } else {
+                return res
+                    .status(404)
+                    .send({
+                        message: "Передан несуществующий _id карточки"
+                    })
+                }
+            })
+        .catch((error) => {
+            if (error.name === "ValidationError" || "CastError") {
             return res
                 .status(400)
                 .send({
                     message: "Переданы некорректные данные для постановки лайка"
                 })
-            }
-            })
-        .catch((error) => {
+            } else {
             return res
                 .status(500)
                 .send({
                     message: `Ошибка: ${error.message}`
                 });
+            }
             })
 }
 
 const deleteLike = (req, res) => {
-    return Card.findByIdAndUpdate(req.body._id,
+    return Card.findByIdAndUpdate(req.params.cardId,
         { $pull: { likes: req.user._id } },
         { new: true },)
         .then((card) => { 
@@ -116,26 +118,29 @@ const deleteLike = (req, res) => {
             return res
                 .status(200)
                 .send(card)
-            } else if (!req.user._id) {
+            } else {
             return res
                 .status(404)
                 .send({
-                    message: "Передан несуществующий _id пользователя"
+                    message: "Передан несуществующий _id карточки"
                 })
-            } else {
+            }
+            })
+        .catch((error) => {
+            console.log(error.name)
+            if (error.name === "ValidationError" || "CastError") {
             return res
                 .status(400)
                 .send({
                     message: "Переданы некорректные данные для снятия лайка"
                 })
-            }
-            })
-        .catch((error) => {
+            } else {
             return res
                 .status(500)
                 .send({
                     message: `Ошибка: ${error.message}`
                 });
+            }
             })
 }
 
