@@ -22,4 +22,4 @@ app.use((req, res, next) => {
 app.use(routes);
 
 const { PORT = 3000 } = process.env;
-app.listen(PORT);
+app.listen(PORT, () => /* eslint-disable no-console */console.log('ok'));
