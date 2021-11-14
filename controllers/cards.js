@@ -95,7 +95,7 @@ const putLike = (req, res) => {
         });
     })
     .catch((error) => {
-      if (error.name === 'ValidationError' || 'CastError') {
+      if (error.name === 'ValidationError' || error.name === 'CastError') {
         return res
           .status(400)
           .send({
@@ -129,7 +129,7 @@ const deleteLike = (req, res) => {
         });
     })
     .catch((error) => {
-      if (error.name === 'ValidationError' || 'CastError') {
+      if (error.name === 'ValidationError' || error.name === 'CastError') {
         return res
           .status(400)
           .send({
