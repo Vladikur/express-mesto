@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
-const UnauthorizedError = require('../errors/unauthorized-err');
 const ConflictError = require('../errors/conflict-err');
 
 const login = (req, res, next) => {
@@ -25,9 +24,7 @@ const login = (req, res, next) => {
           httpOnly: true,
         });
     })
-    .catch(() => {
-      next(new UnauthorizedError('Необходима авторизация'));
-    });
+    .catch(next);
 };
 
 const getUsers = (req, res, next) => {
@@ -45,7 +42,6 @@ const getUsers = (req, res, next) => {
 
 const createUser = (req, res, next) => {
   const { email, password } = req.body;
-
   User.findOne({
     email,
   })
@@ -60,9 +56,11 @@ const createUser = (req, res, next) => {
           password: hash,
         }))
         .then((user) => {
-          res
-            .status(201)
-            .send({ email: user.email, id: user._id });
+          if (user) {
+            res
+              .status(201)
+              .send({ email: user.email, id: user._id });
+          }
         })
         .catch((error) => {
           if (error.name === 'ValidationError') {
