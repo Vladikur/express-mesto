@@ -13,7 +13,17 @@ const validatorURL = require('../validation/validatorURL');
 
 router.get('/', auth, getUsers);
 router.get('/me', auth, getCurrentUser);
-router.patch('/me', auth, patchUser);
+router.patch(
+  '/me',
+  auth,
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().required().min(2).max(30),
+      about: Joi.string().required().min(2).max(30),
+    }),
+  }),
+  patchUser,
+);
 router.patch(
   '/me/avatar',
   auth,
@@ -44,9 +54,5 @@ router.post(
   }),
   createUser,
 );
-// Не совсем понял Ваше последнее замечание.
-// Мы ведь не отправлям ссылку на автар при регистрации.
-// Только емэйл и пароль, а ссылка подставляется дефолтная.
-// P.S. почему-то изображения с Вашими скринами не открывались на сайте.
 
 module.exports = router;
