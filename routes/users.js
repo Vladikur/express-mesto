@@ -44,6 +44,7 @@ router.post(
   }),
   login,
 );
+
 router.post(
   '/signup',
   celebrate({
