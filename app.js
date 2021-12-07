@@ -11,6 +11,7 @@ const {
 } = require('./controllers/users');
 const validatorURL = require('./validation/validatorURL');
 const NotFoundError = require('./errors/not-found-err');
+const auth = require('./middlewares/auth');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -30,9 +31,6 @@ app.post(
     body: Joi.object().keys({
       email: Joi.string().required().email(),
       password: Joi.string().required().min(4),
-      avatar: Joi.string().custom(validatorURL),
-      name: Joi.string().min(2).max(30),
-      about: Joi.string().min(2).max(30),
     }),
   }),
   login,
@@ -52,7 +50,7 @@ app.post(
   createUser,
 );
 
-app.use('/', routes);
+app.use('/', auth, routes);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Запрашиваемая страница не существует'));
