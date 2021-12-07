@@ -10,6 +10,7 @@ const {
   login,
 } = require('./controllers/users');
 const validatorURL = require('./validation/validatorURL');
+const NotFoundError = require('./errors/not-found-err');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -53,9 +54,8 @@ app.post(
 
 app.use('/', routes);
 
-app.use((req, res) => {
-  res.status(404);
-  res.send({ message: 'Запрашиваемая страница не существует' });
+app.use((req, res, next) => {
+  next(new NotFoundError('Запрашиваемая страница не существует'));
 });
 
 app.use(errors());
