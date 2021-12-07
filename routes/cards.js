@@ -11,6 +11,7 @@ const auth = require('../middlewares/auth');
 const validatorURL = require('../validation/validatorURL');
 
 router.get('/', auth, getCard);
+
 router.post(
   '/',
   auth,
@@ -22,6 +23,7 @@ router.post(
   }),
   createCard,
 );
+
 router.delete(
   '/:cardId',
   auth,
@@ -32,6 +34,7 @@ router.delete(
   }),
   deleteCard,
 );
+
 router.put(
   '/:cardId/likes',
   auth,
@@ -42,6 +45,7 @@ router.put(
   }),
   putLike,
 );
+
 router.delete(
   '/:cardId/likes',
   auth,

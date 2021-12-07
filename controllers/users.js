@@ -139,6 +139,33 @@ const getCurrentUser = (req, res, next) => {
     });
 };
 
+const getUserById = (req, res, next) => {
+  const { userId } = req.params;
+
+  return User.findById(userId)
+    .then((user) => {
+      if (user) {
+        return res
+          .status(200)
+          .send({
+            id: user._id,
+            name: user.name,
+            about: user.about,
+            avatar: user.avatar,
+          });
+      }
+      throw new NotFoundError('Запрашиваемый пользователь не найден');
+    })
+
+    .catch((error) => {
+      if (error.name === 'CastError') {
+        next(new NotFoundError('Запрашиваемый пользователь не найден'));
+      }
+
+      next(error);
+    });
+};
+
 module.exports = {
   getUsers,
   createUser,
@@ -146,4 +173,5 @@ module.exports = {
   avatarUser,
   login,
   getCurrentUser,
+  getUserById,
 };
