@@ -1,5 +1,6 @@
 const path = require('path');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const { errors, celebrate, Joi } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const express = require('express');
@@ -12,11 +13,14 @@ const {
 const validatorURL = require('./validation/validatorURL');
 const NotFoundError = require('./errors/not-found-err');
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 const app = express();
+
+app.use(cors());
 
 app.use(cookieParser());
 
@@ -24,6 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(requestLogger);
 
 app.post(
   '/signin',
@@ -51,6 +57,8 @@ app.post(
 );
 
 app.use('/', auth, routes);
+
+app.use(errorLogger);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Запрашиваемая страница не существует'));
