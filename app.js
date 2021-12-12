@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config();
 const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -22,7 +22,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 const app = express();
-
+// console.log(process.env.NODE_ENV);
 app.use(cors());
 
 app.use(cookieParser());
