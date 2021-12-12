@@ -1,4 +1,3 @@
-require('dotenv').config();
 const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -22,6 +21,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 const app = express();
+
+require('dotenv').config();
 
 app.use(cors());
 
