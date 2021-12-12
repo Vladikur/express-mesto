@@ -15,12 +15,20 @@ const NotFoundError = require('./errors/not-found-err');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
+const { PORT = 3000 } = process.env;
+
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://kurmaev.students.nomoredomains.rocks',
+    'https://kurmaev.students.nomoredomains.rocks',
+    'http://localhost:3000',
+  ],
+}));
 
 app.use(cookieParser());
 
@@ -80,5 +88,4 @@ app.use((err, req, res, next) => {
   next();
 });
 
-const { PORT = 3000 } = process.env;
 app.listen(PORT, () => /* eslint-disable no-console */console.log('ok'));
