@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -22,14 +23,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 const app = express();
 
-const corsOptions = {
-  origin: [
-    'http://kurmaev.students.nomoredomains.rocks',
-    'https://kurmaev.students.nomoredomains.rocks',
-    'http://localhost:3000',
-  ],
-  optionsSuccessStatus: 200,
-};
+app.use(cors());
 
 app.use(cookieParser());
 
@@ -42,7 +36,6 @@ app.use(requestLogger);
 
 app.post(
   '/signin',
-  cors(corsOptions),
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
@@ -54,7 +47,6 @@ app.post(
 
 app.post(
   '/signup',
-  cors(corsOptions),
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
@@ -67,7 +59,7 @@ app.post(
   createUser,
 );
 
-app.use('/', cors(corsOptions), auth, routes);
+app.use('/', auth, routes);
 
 app.use(errorLogger);
 
