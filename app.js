@@ -5,6 +5,7 @@ const { errors, celebrate, Joi } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const express = require('express');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 const routes = require('./routes/index');
 const {
   createUser,
@@ -22,9 +23,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 const app = express();
 
-require('dotenv').config();
-
 app.use(cors());
+app.options('*', cors());
 
 app.use(cookieParser());
 
@@ -34,6 +34,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post(
   '/signin',
