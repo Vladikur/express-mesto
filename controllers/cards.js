@@ -78,9 +78,9 @@ const putLike = (req, res, next) => {
     .catch((error) => {
       if (error.name === 'ValidationError' || error.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные для постановки лайка'));
+      } else {
+        next(error);
       }
-
-      next(error);
     });
 };
 
@@ -101,9 +101,9 @@ const deleteLike = (req, res, next) => {
     .catch((error) => {
       if (error.name === 'ValidationError' || error.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные для снятия лайка'));
+      } else {
+        next(error);
       }
-
-      next(error);
     });
 };
 

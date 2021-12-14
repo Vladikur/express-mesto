@@ -49,8 +49,8 @@ const createUser = (req, res, next) => {
   User.findOne({
     email,
   })
-    .then((userEmail) => {
-      if (userEmail) {
+    .then((userData) => {
+      if (userData) {
         throw new ConflictError('Пользователь с таким email зарегистрирован');
       }
 
@@ -69,9 +69,9 @@ const createUser = (req, res, next) => {
         .catch((error) => {
           if (error.name === 'ValidationError') {
             next(new BadRequestError('Переданы некорректные данные для создания пользователя'));
+          } else {
+            next(error);
           }
-
-          next(error);
         });
     })
     .catch(next);
@@ -94,9 +94,9 @@ const patchUser = (req, res, next) => {
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные для изменения данных пользователя'));
+      } else {
+        next(error);
       }
-
-      next(error);
     });
 };
 
@@ -117,9 +117,9 @@ const avatarUser = (req, res, next) => {
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные для изменения аватара'));
+      } else {
+        next(error);
       }
-
-      next(error);
     });
 };
 
@@ -137,9 +137,9 @@ const getCurrentUser = (req, res, next) => {
     .catch((error) => {
       if (error.name === 'CastError') {
         next(new NotFoundError('Запрашиваемый пользователь не найден'));
+      } else {
+        next(error);
       }
-
-      next(error);
     });
 };
 
@@ -164,9 +164,9 @@ const getUserById = (req, res, next) => {
     .catch((error) => {
       if (error.name === 'CastError') {
         next(new NotFoundError('Запрашиваемый пользователь не найден'));
+      } else {
+        next(error);
       }
-
-      next(error);
     });
 };
 

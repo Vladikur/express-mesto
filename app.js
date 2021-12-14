@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+const helmet = require('helmet');
 const routes = require('./routes/index');
 const {
   createUser,
@@ -25,6 +26,8 @@ const app = express();
 
 app.use(cors());
 app.options('*', cors());
+
+app.use(helmet());
 
 app.use(cookieParser());
 
